@@ -10,6 +10,8 @@ namespace ClapBot.Core.Commands
 
     public async Task _MockAddPerson()
     {
+      await Context.Message.DeleteAsync();
+
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersAdded = string.Empty;
@@ -21,9 +23,9 @@ namespace ClapBot.Core.Commands
             MessageHandler.mocked.Add(user);
           }
         }
-        ClientConsole.Log($"Adding {usersAdded} to mock list");
+        if (usersAdded != string.Empty)
+          ClientConsole.Log($"Adding {usersAdded} to mock list");
       }
-      await Context.Message.DeleteAsync();
     }
   }
 
@@ -32,6 +34,8 @@ namespace ClapBot.Core.Commands
     [Command("RemoveMockUser"), Summary("Stops mocking a user")]
     public async Task _MockRemovePerson()
     {
+      await Context.Message.DeleteAsync();
+
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersRemoved = string.Empty;
@@ -43,9 +47,9 @@ namespace ClapBot.Core.Commands
             MessageHandler.mocked.Remove(user);
           }
         }
-        ClientConsole.Log($"Removing {usersRemoved} from mock list");
+        if (usersRemoved != string.Empty)
+          ClientConsole.Log($"Removing {usersRemoved} from mock list");
       }
-      await Context.Message.DeleteAsync();
     }
   }
 }

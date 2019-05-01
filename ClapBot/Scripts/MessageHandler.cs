@@ -91,9 +91,9 @@ namespace ClapBot
 
       // send info the logs
       ClientConsole.Log($"Mocking {message.Author.Username} with message {responce} replacing {message.Content}");
-      await message.DeleteAsync();
       // send bot message with response
       await message.Channel.SendMessageAsync($"{responce} -From {message.Author.Username}");
+      await message.DeleteAsync();
     }
 
     /// <summary>

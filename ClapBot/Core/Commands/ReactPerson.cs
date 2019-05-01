@@ -9,6 +9,7 @@ namespace ClapBot.Core.Commands
     [Command("AddReactUser"), Summary("Adds user to be reacted to")]
     public async Task _ReactPersonAdd()
     {
+      await Context.Message.DeleteAsync();
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersAdded = string.Empty;
@@ -20,9 +21,9 @@ namespace ClapBot.Core.Commands
             MessageHandler.usersToReactTo.Add(user);
           }
         }
-        ClientConsole.Log($"Adding {usersAdded} to react list");
+        if (usersAdded != string.Empty)
+          ClientConsole.Log($"Adding {usersAdded} to react list");
       }
-      await Context.Message.DeleteAsync();
     }
   }
 
@@ -31,6 +32,7 @@ namespace ClapBot.Core.Commands
     [Command("RemoveReactUser"), Summary("Removes user to be reacted to")]
     public async Task _ReactPersonRemove()
     {
+      await Context.Message.DeleteAsync();
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersRemoved = string.Empty;
@@ -42,9 +44,9 @@ namespace ClapBot.Core.Commands
             MessageHandler.usersToReactTo.Remove(user);
           }
         }
-        ClientConsole.Log($"Removing {usersRemoved} from react list");
+        if (usersRemoved != string.Empty)
+          ClientConsole.Log($"Removing {usersRemoved} from react list");
       }
-      await Context.Message.DeleteAsync();
     }
   }
 }
