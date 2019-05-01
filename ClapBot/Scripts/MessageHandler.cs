@@ -85,13 +85,16 @@ namespace ClapBot
     /// <returns></returns>
     private static async Task Mock(SocketUserMessage message)
     {
+      // check if author should be moked and that the message isnt empty
       if (!mocked.Contains(message.Author) || message.Content == string.Empty)
         return;
 
+      // separate each charecter
       char[] charArr = message.Content.ToCharArray();
       string responce = new Emoji("👏").ToString();
       for (int i = 0; i < charArr.Length; i++)
       {
+        // change spaces for claps and randomly capitlaize and lowercase letters
         if (charArr[i] == ' ')
           responce += new Emoji("👏");
         else if (new Random().Next(0, 2) == 0)
@@ -99,13 +102,21 @@ namespace ClapBot
         else
           responce += Char.ToLower(charArr[i]);
       }
+      // end with clap
       responce += new Emoji("👏");
 
+      // send info the logs
       ActionLog.ClientLog($"Mocking {message.Author.Username} with message {responce} replaceing {message.Content}");
+      // send bot message with responce
       var newMessage = await message.Channel.SendMessageAsync(responce);
       await Task.Delay(new TimeSpan(0, 0, 5));
+      // modify bot message
       await newMessage.ModifyAsync(m => m.Content = responce + ":)");
+      //Attemp to modify user message
       await message.ModifyAsync(m => m.Content = responce);
+      // for some reason the bot message gets changed but not the user message
+      // it might be the message data type but im not sure
+      // There is no conversion between the data types so i might be in trouble
     }
 
     /// <summary>

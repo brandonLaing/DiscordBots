@@ -6,6 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Core\Data\**" />
+    <Compile Remove="Resources\Database\**" />
+    <Compile Remove="Resources\DataTypes\**" />
+    <Compile Remove="Resources\Extensions\**" />
+    <EmbeddedResource Remove="Core\Data\**" />
+    <EmbeddedResource Remove="Resources\Database\**" />
+    <EmbeddedResource Remove="Resources\DataTypes\**" />
+    <EmbeddedResource Remove="Resources\Extensions\**" />
+    <None Remove="Core\Data\**" />
+    <None Remove="Resources\Database\**" />
+    <None Remove="Resources\DataTypes\**" />
+    <None Remove="Resources\Extensions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Data\Token.txt" />
   </ItemGroup>
 
@@ -15,13 +30,6 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="2.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Core\Data\" />
-    <Folder Include="Resources\Database\" />
-    <Folder Include="Resources\DataTypes\" />
-    <Folder Include="Resources\Extensions\" />
   </ItemGroup>
 
 </Project>
