@@ -7,7 +7,7 @@ namespace ClapBot.Core.Commands
 {
   public class Help : ModuleBase<SocketCommandContext>
   {
-    [Command("Help"), Summary("Sends a dm of commands to the user")]
+    [Command("Help"), Summary("Sends a DM of commands to the user")]
     public async Task _Help()
     {
       IDMChannel dm = await Context.User.GetOrCreateDMChannelAsync();
@@ -17,7 +17,7 @@ namespace ClapBot.Core.Commands
         sb.AppendLine($"!{command.Name} - {command.Summary}");
       }
 
-      ActionLog.ClientLog($"Sending help to {Context.User}");
+      ClientConsole.Log($"Sending help to {Context.User}");
       await dm.SendMessageAsync(sb.ToString());
       await Context.Message.DeleteAsync();
     }

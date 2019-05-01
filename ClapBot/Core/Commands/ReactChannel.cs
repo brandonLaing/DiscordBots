@@ -15,7 +15,7 @@ namespace ClapBot.Core.Commands
         if (!MessageHandler.channelsToReactIn.Contains(Context.Channel))
         {
           MessageHandler.channelsToReactIn.Add(Context.Channel);
-          ActionLog.ClientLog($"Adding {Context.Channel.Name} to react channels");
+          ClientConsole.Log($"Adding {Context.Channel.Name} to react channels");
           await Context.Channel.SendMessageAsync("Starting reactions in this channel");
         }
       }
@@ -32,7 +32,7 @@ namespace ClapBot.Core.Commands
         if (MessageHandler.channelsToReactIn.Contains(Context.Channel))
         {
           MessageHandler.channelsToReactIn.Remove(Context.Channel);
-          ActionLog.ClientLog($"Removing {Context.Channel.Name} to react channels");
+          ClientConsole.Log($"Removing {Context.Channel.Name} to react channels");
           await Context.Channel.SendMessageAsync("Stopping reactions in this channel");
         }
       }

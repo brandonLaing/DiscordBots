@@ -99,7 +99,7 @@ namespace ClapBot
       await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
       Client.Ready += SetGame;
-      Client.Log += ActionLog.ClientLog;
+      Client.Log += ClientConsole.Log;
 
       await Client.LoginAsync(TokenType.Bot, Token);
       await Client.StartAsync();

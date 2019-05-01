@@ -33,7 +33,7 @@ namespace ClapBot
         ) return;
 
       // display message
-      ActionLog.ClientLog(message);
+      ClientConsole.Log(message);
 
       // check if its a command
       int prefixPos = 0;
@@ -47,7 +47,7 @@ namespace ClapBot
 
       var result = await Starter.Commands.ExecuteAsync(context, prefixPos, null);
       if (!result.IsSuccess)
-        ActionLog.ClientLog($"Something went wrong with executing a command. Command : {context.Message.Content} | {result.ErrorReason}");
+        ClientConsole.Log($"Something went wrong with executing a command. Command : {context.Message.Content} | {result.ErrorReason}");
     }
 
     /// <summary>
@@ -59,42 +59,26 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task ClientMessageEdited(Cacheable<IMessage, ulong> messageUser, SocketMessage rawMessage, ISocketMessageChannel channel)
     {
-      var message = rawMessage as SocketUserMessage;
-      var content = new SocketCommandContext(Starter.Client, message);
 
-      if (
-        message.Content == null ||
-        message.Content.Trim() == string.Empty ||
-        message.Author.IsBot
-        ) return;
-
-      ActionLog.ClientLog(message);
-
-      int prefixPos = 0;
-      if (!message.HasCharPrefix('!', ref prefixPos) || message.HasMentionPrefix(Starter.Client.CurrentUser, ref prefixPos))
-      {
-        await Mock(message);
-        await ReactWithClap(message);
-      }
     }
 
     /// <summary>
     /// Edits user message to randomly capitalize or lowercase letter and replace spaces with claps
     /// </summary>
-    /// <param name="message">Message that is being recived</param>
+    /// <param name="message">Message that is being received</param>
     /// <returns></returns>
     private static async Task Mock(SocketUserMessage message)
     {
-      // check if author should be moked and that the message isnt empty
+      // check if author should be mocked and that the message isn't empty
       if (!mocked.Contains(message.Author) || message.Content == string.Empty)
         return;
 
-      // separate each charecter
+      // separate each character
       char[] charArr = message.Content.ToCharArray();
       string responce = new Emoji("👏").ToString();
       for (int i = 0; i < charArr.Length; i++)
       {
-        // change spaces for claps and randomly capitlaize and lowercase letters
+        // change spaces for claps and randomly capitalize and lowercase letters
         if (charArr[i] == ' ')
           responce += new Emoji("👏");
         else if (new Random().Next(0, 2) == 0)
@@ -106,27 +90,20 @@ namespace ClapBot
       responce += new Emoji("👏");
 
       // send info the logs
-      ActionLog.ClientLog($"Mocking {message.Author.Username} with message {responce} replaceing {message.Content}");
-      // send bot message with responce
-      var newMessage = await message.Channel.SendMessageAsync(responce);
-      await Task.Delay(new TimeSpan(0, 0, 5));
-      // modify bot message
-      await newMessage.ModifyAsync(m => m.Content = responce + ":)");
-      //Attemp to modify user message
-      await message.ModifyAsync(m => m.Content = responce);
-      // for some reason the bot message gets changed but not the user message
-      // it might be the message data type but im not sure
-      // There is no conversion between the data types so i might be in trouble
+      ClientConsole.Log($"Mocking {message.Author.Username} with message {responce} replacing {message.Content}");
+      await message.DeleteAsync();
+      // send bot message with response
+      await message.Channel.SendMessageAsync($"{responce} -From {message.Author.Username}");
     }
 
     /// <summary>
     /// Adds clap reaction to message
     /// </summary>
-    /// <param name="message">Message recived from the user</param>
+    /// <param name="message">Message received from the user</param>
     /// <returns></returns>
     private static async Task ReactWithClap(SocketUserMessage message)
     {
-      if (channelsToReactIn.Contains(message.Channel) || usersToReactTo.Contains(message.Author))
+      if (channelsToReactIn.Contains(message.Channel) || usersToReactTo.Contains(message.Author) || message.Author.IsBot)
         await message.AddReactionAsync(new Emoji("👏"));
     }
   }

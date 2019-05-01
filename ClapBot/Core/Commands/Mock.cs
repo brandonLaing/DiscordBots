@@ -21,7 +21,7 @@ namespace ClapBot.Core.Commands
             MessageHandler.mocked.Add(user);
           }
         }
-        ActionLog.ClientLog($"Adding {usersAdded} to mock list");
+        ClientConsole.Log($"Adding {usersAdded} to mock list");
       }
       await Context.Message.DeleteAsync();
     }
@@ -43,7 +43,7 @@ namespace ClapBot.Core.Commands
             MessageHandler.mocked.Remove(user);
           }
         }
-        ActionLog.ClientLog($"Removing {usersRemoved} from mock list");
+        ClientConsole.Log($"Removing {usersRemoved} from mock list");
       }
       await Context.Message.DeleteAsync();
     }

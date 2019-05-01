@@ -20,7 +20,7 @@ namespace ClapBot.Core.Commands
             MessageHandler.usersToReactTo.Add(user);
           }
         }
-        ActionLog.ClientLog($"Adding {usersAdded} to react list");
+        ClientConsole.Log($"Adding {usersAdded} to react list");
       }
       await Context.Message.DeleteAsync();
     }
@@ -28,12 +28,11 @@ namespace ClapBot.Core.Commands
 
   public class ReactPersonRemove : ModuleBase<SocketCommandContext>
   {
-    [Command("RemoveUser"), Summary("Removes user to be reacted to")]
+    [Command("RemoveReactUser"), Summary("Removes user to be reacted to")]
     public async Task _ReactPersonRemove()
     {
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
-
         string usersRemoved = string.Empty;
         foreach (var user in Context.Message.MentionedUsers)
         {
@@ -43,7 +42,7 @@ namespace ClapBot.Core.Commands
             MessageHandler.usersToReactTo.Remove(user);
           }
         }
-        ActionLog.ClientLog($"Removing {usersRemoved} from react list");
+        ClientConsole.Log($"Removing {usersRemoved} from react list");
       }
       await Context.Message.DeleteAsync();
     }
