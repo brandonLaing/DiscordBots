@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Discord.WebSocket;
 
 namespace ClapBot
@@ -100,9 +101,11 @@ namespace ClapBot
       }
       responce += new Emoji("👏");
 
-      ActionLog.ClientLog($"Mocking {message.Author.Username} with message {responce}");
-      await message.Channel.SendMessageAsync(responce);
-      await message.ModifyAsync(m => { m.Content = responce; }, null);
+      ActionLog.ClientLog($"Mocking {message.Author.Username} with message {responce} replaceing {message.Content}");
+      var newMessage = await message.Channel.SendMessageAsync(responce);
+      await Task.Delay(new TimeSpan(0, 0, 5));
+      await newMessage.ModifyAsync(m => m.Content = responce + ":)");
+      await message.ModifyAsync(m => m.Content = responce);
     }
 
     /// <summary>
