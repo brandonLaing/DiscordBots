@@ -1,10 +1,7 @@
-﻿using Discord;
-using Discord.Rest;
-using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 
 namespace ClapBot
 {

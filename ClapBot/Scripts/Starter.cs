@@ -1,13 +1,9 @@
-﻿using System;
-using System.Text;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 
 using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 
 namespace ClapBot
@@ -44,7 +40,7 @@ namespace ClapBot
       }
     }
 
-    public static string MyId = "2871";
+    public static string[] PriorityIds = { "2871", "6188", "5831"};
     #endregion
 
     private static string _rootDirectory = string.Empty;
@@ -98,6 +94,8 @@ namespace ClapBot
       InitilizeVariables();
 
       Client.MessageReceived += MessageHandler.ClientMessageRecived;
+      Client.MessageUpdated += MessageHandler.ClientMessageEdited;
+
       await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
       Client.Ready += SetGame;
