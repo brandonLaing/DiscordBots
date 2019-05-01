@@ -3,6 +3,7 @@ using System.Text;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Discord;
 using Discord.Commands;
@@ -15,6 +16,27 @@ namespace ClapBot
   {
     private DiscordSocketClient client;
     private CommandService commands;
+
+    private List<string> activeChannels = new List<string>();
+    private string[] AcClap
+    {
+      get
+      {
+        string path = Directory.GetCurrentDirectory().Split("bin")[0] + @"Data\";
+        if (!Directory.Exists(path))
+          Directory.CreateDirectory(path);
+
+        path += "AciiClap.txt";
+        Console.WriteLine(path);
+
+        if (File.Exists(path))
+        {
+          string[] message = File.ReadAllLines(path);
+          return message;
+        }
+        return null;
+      }
+    }
 
     static void Main(string[] args) =>
       new Program()
@@ -43,11 +65,7 @@ namespace ClapBot
       client.Log += ClientLog;
 
       string token = "NTcyODY5NjAyMDMyNDg0Mzgz.XMinkQ.HSqMXhxgDPNcReZs0NNBWxcfhE8";
-      //using (FileStream stream = new FileStream((Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)).Replace(@"bin\Debug\netcoreapp2.0", @"Data\Token.txt"), FileMode.Open, FileAccess.Read))
-      //using (var readToken = new StreamReader(stream))
-      //{
-      //  token = readToken.ReadToEnd();
-      //}
+
       await client.LoginAsync(TokenType.Bot, token);
 
       await client.LoginAsync(TokenType.Bot, token);
@@ -56,24 +74,46 @@ namespace ClapBot
       await Task.Delay(-1);
     }
 
-    private async Task ClientLog(LogMessage message)
-    {
-      Console.WriteLine($"{DateTime.Now} at {message.Source}: {message.Message}");
-    }
+    private async Task ClientLog(LogMessage message) =>
+      Console.WriteLine($"{DateTime.Now}: {message.Source}: {message.Message}");
 
     private async Task ClientReady()
     {
-      await client.SetGameAsync("Claping", @"https://www.google.com/", ActivityType.Playing);
-
+      await client.SetGameAsync($"with the {new Emoji("👏")} ", "", ActivityType.Playing);
     }
 
-    private async Task ClientMessageRecived(SocketMessage message)
+    private async Task ClientMessageRecived(SocketMessage rawMessage)
     {
-      RestUserMessage rMessage = (RestUserMessage) await message.Channel.GetMessageAsync(message.Id);
-      await rMessage.AddReactionAsync(new Emoji("👏"));
+      RestUserMessage rMessage = (RestUserMessage) await rawMessage.Channel.GetMessageAsync(rawMessage.Id);
+      string message = rMessage.Content;
+      var channel = client.GetChannel(rawMessage.Channel.Id) as IMessageChannel;
 
-      Console.WriteLine($"Processing Message: {rMessage}");
-      if (rMessage.ToString().)
+      if (message.StartsWith("!"))
+      {
+        string command = message.Split('!')[1];
+        command = command.Trim();
+        Console.WriteLine($"{DateTime.Now}: Recived command \"{command}\"");
+        if (command != string.Empty)
+        {
+          switch (command.ToLower())
+          {
+            case "asciiclap":
+              await channel.SendMessageAsync("trying to send ascii art");
+              for (int i = 0; i < AcClap.Length; i++)
+              {
+                await channel.SendMessageAsync(AcClap[i]);
+              }
+              break;
+            case "truefact":
+              await channel.SendMessageAsync("Dan is retarded");
+              break;
+          }
+        }
+      }
+
+      await rMessage.AddReactionAsync(new Emoji("👏"));
+      Console.WriteLine($"{DateTime.Now}: Processing Message: \"{message}\" from {rawMessage.Author.Username}");
+
     }
   }
 }
