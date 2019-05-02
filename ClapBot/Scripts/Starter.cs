@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -94,15 +95,13 @@ namespace ClapBot
       InitilizeVariables();
 
       Client.MessageReceived += MessageHandler.ClientMessageRecived;
-      Client.MessageUpdated += MessageHandler.ClientMessageEdited;
 
       await Commands.AddModulesAsync(Assembly.GetEntryAssembly(), null);
 
       Client.Ready += SetGame;
       Client.Log += ClientConsole.Log;
-
-      await Client.LoginAsync(TokenType.Bot, Token);
-      await Client.StartAsync();
+      Client.Disconnected += Reconnect;
+      await Connect();
 
       await Task.Delay(-1);
     }
@@ -133,6 +132,24 @@ namespace ClapBot
     private async Task SetGame()
     {
       await Client.SetGameAsync($"with the {new Emoji("👏")} ", "", ActivityType.Playing);
+    }
+
+    /// <summary>
+    /// Attempts to reconnect to the server if the bot has been disconnected
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    private async Task Reconnect(Exception exception)
+    {
+      ClientConsole.Log($"Disconnected from discord. Exception : {exception.Message}");
+      await Task.Delay(1);
+    }
+
+    private async Task Connect()
+    {
+      ClientConsole.Log("Connecting to discord");
+      await Client.LoginAsync(TokenType.Bot, Token);
+      await Client.StartAsync();
     }
   }
 }

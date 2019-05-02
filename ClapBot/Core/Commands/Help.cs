@@ -28,6 +28,8 @@ namespace ClapBot.Core.Commands
     [Command("HelpChannel"), Summary("Displays all commands in the channel")]
     public async Task _HelpChannel()
     {
+      await Context.Channel.SendMessageAsync("Typing done");
+
       StringBuilder sb = new StringBuilder();
       foreach (var command in Starter.Commands.Commands)
         sb.AppendLine($"{command.Name} - {command.Summary}");

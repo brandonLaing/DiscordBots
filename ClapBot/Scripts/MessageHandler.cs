@@ -51,18 +51,6 @@ namespace ClapBot
     }
 
     /// <summary>
-    /// updates whenever a message is edited
-    /// </summary>
-    /// <param name="messageUser"></param>
-    /// <param name="rawMessage"></param>
-    /// <param name="channel"></param>
-    /// <returns></returns>
-    public static async Task ClientMessageEdited(Cacheable<IMessage, ulong> messageUser, SocketMessage rawMessage, ISocketMessageChannel channel)
-    {
-
-    }
-
-    /// <summary>
     /// Edits user message to randomly capitalize or lowercase letter and replace spaces with claps
     /// </summary>
     /// <param name="message">Message that is being received</param>
