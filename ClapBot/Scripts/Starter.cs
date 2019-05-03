@@ -44,11 +44,10 @@ namespace ClapBot
 
     public static string[] PriorityIds = { "2871", "6188", "5831"};
     #endregion
-
     /// <summary>
     /// Bot Token
     /// </summary>
-    private string Token
+    private static string Token
     {
       get
       {
@@ -121,6 +120,12 @@ namespace ClapBot
 
     private async Task Connect()
     {
+      if (Token == string.Empty)
+      {
+        ClientConsole.Log("Exited due to no key being set");
+        return;
+      }
+
       ClientConsole.Log("Connecting to discord");
       await Client.LoginAsync(TokenType.Bot, Token);
       await Client.StartAsync();
