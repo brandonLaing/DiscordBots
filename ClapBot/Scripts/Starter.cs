@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -44,33 +45,6 @@ namespace ClapBot
     public static string[] PriorityIds = { "2871", "6188", "5831"};
     #endregion
 
-    private static string _rootDirectory = string.Empty;
-    /// <summary>
-    /// Root directory of project
-    /// </summary>
-    public static string RootDirectory
-    {
-      get
-      {
-        if (_rootDirectory == string.Empty)
-        {
-          string rawPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Remove(0, 6);
-          string newPath = string.Empty;
-          bool hasFoundRoot = false;
-          for (int i = rawPath.Split('\\').Length - 1; i >= 0; i--)
-          {
-            string newSection = rawPath.Split('\\')[i];
-            if (newSection != "ClapBot" && !hasFoundRoot)
-              continue;
-            hasFoundRoot = true;
-            newPath = newPath.Insert(0, newSection + '\\');
-          }
-          _rootDirectory = newPath;
-        }
-
-        return _rootDirectory;
-      }
-    }
     /// <summary>
     /// Bot Token
     /// </summary>
@@ -78,7 +52,7 @@ namespace ClapBot
     {
       get
       {
-        return System.IO.File.ReadAllText(RootDirectory + @"\Data\Token.txt");
+        return "NTcyODY5NjAyMDMyNDg0Mzgz.XMvVoQ.MeWYkw1Ti949gLhaM2C1JSvcF7Q";
       }
     }
 
