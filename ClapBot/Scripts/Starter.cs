@@ -44,7 +44,6 @@ namespace ClapBot
     public static string[] PriorityIds = { "2871", "6188", "5831"};
     #endregion
 
-    private static string _rootDirectory = string.Empty;
     /// <summary>
     /// Root directory of project
     /// </summary>
@@ -52,33 +51,26 @@ namespace ClapBot
     {
       get
       {
-        if (_rootDirectory == string.Empty)
-        {
-          string rawPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase).Remove(0, 6);
-          string newPath = string.Empty;
-          bool hasFoundRoot = false;
-          for (int i = rawPath.Split('\\').Length - 1; i >= 0; i--)
-          {
-            string newSection = rawPath.Split('\\')[i];
-            if (newSection != "ClapBot" && !hasFoundRoot)
-              continue;
-            hasFoundRoot = true;
-            newPath = newPath.Insert(0, newSection + '\\');
-          }
-          _rootDirectory = newPath;
-        }
-
-        return _rootDirectory;
+        string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        return path;
       }
     }
+
     /// <summary>
     /// Bot Token
     /// </summary>
-    private string Token
+    private static string Token
     {
       get
       {
-        return System.IO.File.ReadAllText(RootDirectory + @"\Data\Token.txt");
+        string path = RootDirectory + @"\Data\Token.txt";
+        if (!File.Exists(path))
+        {
+          if (!Directory.Exists(RootDirectory + @"\Data"))
+            Directory.CreateDirectory(RootDirectory + @"\Data");
+          File.CreateText(path);
+        }
+        return File.ReadAllText(path);
       }
     }
 
@@ -147,6 +139,12 @@ namespace ClapBot
 
     private async Task Connect()
     {
+      if (Token == string.Empty)
+      {
+        ClientConsole.Log("Exited due to no key being set");
+        return;
+      }
+
       ClientConsole.Log("Connecting to discord");
       await Client.LoginAsync(TokenType.Bot, Token);
       await Client.StartAsync();
