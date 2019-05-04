@@ -1,6 +1,8 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 
 namespace ClapBot.Core.Commands
 {
@@ -13,7 +15,7 @@ namespace ClapBot.Core.Commands
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersAdded = string.Empty;
-        foreach (var user in Context.Message.MentionedUsers)
+        foreach (SocketUser user in Context.Message.MentionedUsers)
         {
           if (!MessageHandler.usersToReactTo.Contains(user))
           {
@@ -22,7 +24,7 @@ namespace ClapBot.Core.Commands
           }
         }
         if (usersAdded != string.Empty)
-          ClientConsole.Log($"Adding {usersAdded} to react list");
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React User", $"Adding {usersAdded} to react list by {Context.User.Username}"));
       }
     }
   }
@@ -36,7 +38,7 @@ namespace ClapBot.Core.Commands
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         string usersRemoved = string.Empty;
-        foreach (var user in Context.Message.MentionedUsers)
+        foreach (SocketUser user in Context.Message.MentionedUsers)
         {
           if (MessageHandler.usersToReactTo.Contains(user))
           {
@@ -45,7 +47,7 @@ namespace ClapBot.Core.Commands
           }
         }
         if (usersRemoved != string.Empty)
-          ClientConsole.Log($"Removing {usersRemoved} from react list");
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React User", $"Removing {usersRemoved} from react list by {Context.User.Username}"));
       }
     }
   }

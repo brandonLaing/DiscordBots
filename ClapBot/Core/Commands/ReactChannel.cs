@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 
 namespace ClapBot.Core.Commands
@@ -15,7 +16,7 @@ namespace ClapBot.Core.Commands
         if (!MessageHandler.channelsToReactIn.Contains(Context.Channel))
         {
           MessageHandler.channelsToReactIn.Add(Context.Channel);
-          ClientConsole.Log($"Adding {Context.Channel.Name} to react channels");
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React Channel", $"Adding {Context.Channel.Name} to react channels by {Context.User.Username}"));
           await Context.Channel.SendMessageAsync("Starting reactions in this channel");
         }
       }
@@ -32,7 +33,7 @@ namespace ClapBot.Core.Commands
         if (MessageHandler.channelsToReactIn.Contains(Context.Channel))
         {
           MessageHandler.channelsToReactIn.Remove(Context.Channel);
-          ClientConsole.Log($"Removing {Context.Channel.Name} to react channels");
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React Channel", $"Removing {Context.Channel.Name} from react channels by {Context.User.Username}"));
           await Context.Channel.SendMessageAsync("Stopping reactions in this channel");
         }
       }

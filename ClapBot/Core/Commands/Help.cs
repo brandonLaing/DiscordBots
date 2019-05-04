@@ -17,7 +17,7 @@ namespace ClapBot.Core.Commands
         sb.AppendLine($"!{command.Name} - {command.Summary}");
       }
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Help", $"Sending help to {Context.User.Username}"));
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Help", $"Sending help to {Context.User.Username}"));
       await dm.SendMessageAsync(sb.ToString());
       await Context.Message.DeleteAsync();
     }
@@ -32,7 +32,7 @@ namespace ClapBot.Core.Commands
       foreach (var command in Starter.Commands.Commands)
         sb.AppendLine($"{command.Name} - {command.Summary}");
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Help", $"Sending help in channel to {Context.User.Username}"));
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Help", $"Sending help in channel to {Context.User.Username}"));
       await Context.Channel.SendMessageAsync(sb.ToString());
     }
   }

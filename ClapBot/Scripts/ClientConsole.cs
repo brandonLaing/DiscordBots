@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
@@ -7,23 +9,27 @@ namespace ClapBot
 {
   static class ClientConsole
   {
+    public static LogSeverity _logSeverity;
+
     private static string MessageStart
     { get { return $"<{DateTime.Now}>"; } }
 
     public static async Task Log(LogMessage message)
     {
-      await Task.Delay(0);
-      Console.WriteLine($"{MessageStart} {message.Source}: {message.Message}");
+      string output = 
+        $"{MessageStart} " +
+        $"{message.Source}: " +
+        $"{message.Message}";
+
+      Console.WriteLine(output);
+      await SaveSystem.AddToSaveLog(output);
     }
 
-    public static void Log(string message)
+    public static async Task Log(SocketUserMessage message)
     {
-      Console.WriteLine($"{MessageStart} {message}");
-    }
-
-    public static void Log(SocketUserMessage message)
-    {
-      Console.WriteLine($"{MessageStart} Received new message from {message.Author.Username} #{message.Author.Discriminator} saying \"{message.Content}\" in {message.Channel.Name}");
+      await Log(new LogMessage(LogSeverity.Info, 
+        "Message", 
+        $"{message.Author.Username} id-{message.Author.Id} said \"{message.Content}\""));
     }
   }
 }

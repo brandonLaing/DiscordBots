@@ -10,7 +10,6 @@ namespace ClapBot
 {
   static class MessageHandler
   {
-    public static List<SocketUser> mocked = new List<SocketUser>();
     public static List<ISocketMessageChannel> channelsToReactIn = new List<ISocketMessageChannel>();
     public static List<SocketUser> usersToReactTo = new List<SocketUser>();
 
@@ -33,7 +32,7 @@ namespace ClapBot
         ) return;
 
       // display message
-      ClientConsole.Log(message);
+      await ClientConsole.Log(message);
 
       // check if its a command
       int prefixPos = 0;
@@ -47,7 +46,7 @@ namespace ClapBot
 
       var result = await Starter.Commands.ExecuteAsync(context, prefixPos, null);
       if (!result.IsSuccess)
-        ClientConsole.Log($"Something went wrong with executing a command. Command : {context.Message.Content} | {result.ErrorReason}");
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler",$"Something went wrong with executing a command. Command : {context.Message.Content} | {result.ErrorReason}"));
     }
 
     /// <summary>
@@ -58,7 +57,7 @@ namespace ClapBot
     private static async Task Mock(SocketUserMessage message)
     {
       // check if author should be mocked and that the message isn't empty
-      if (!mocked.Contains(message.Author) || message.Content == string.Empty)
+      if (!SaveSystem.Mocked.Contains(message.Author) || message.Content == string.Empty)
         return;
 
       // separate each character
@@ -78,7 +77,7 @@ namespace ClapBot
       responce += new Emoji("👏");
 
       // send info the logs
-      ClientConsole.Log($"Mocking {message.Author.Username} with message {responce} replacing {message.Content}");
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Mocking {message.Author.Username} with message {responce} replacing {message.Content}"));
       // send bot message with response
       await message.Channel.SendMessageAsync($"{responce} -From {message.Author.Username}");
       await message.DeleteAsync();
