@@ -38,6 +38,7 @@ namespace ClapBot
       int prefixPos = 0;
       if (!message.HasCharPrefix('!', ref prefixPos) || message.HasMentionPrefix(Starter.Client.CurrentUser, ref prefixPos))
       {
+        Console.WriteLine("Not command");
         await Mock(message);
         await ReactWithClap(message);
 
@@ -56,10 +57,23 @@ namespace ClapBot
     /// <returns></returns>
     private static async Task Mock(SocketUserMessage message)
     {
+      Console.WriteLine($"In Mocked {SaveSystem.GetMocked().Count}");
+
+      foreach (var mocked in SaveSystem.GetMocked())
+      {
+        Console.WriteLine("Checking get mocked v author id \n" + mocked + "\n" + message.Author.Id);
+        if (mocked == message.Author.Id)
+          Console.WriteLine("user in get mocked == author of this message");
+      }
+
+      if (SaveSystem.GetMocked().Contains(message.Author.Id))
+        Console.WriteLine("Save system contains the author of this message");
+
       // check if author should be mocked and that the message isn't empty
-      if (!SaveSystem.Mocked.Contains(message.Author) || message.Content == string.Empty)
+      if (!SaveSystem.GetMocked().Contains(message.Author.Id) || message.Content == string.Empty)
         return;
 
+      Console.WriteLine("Should be mocked");
       // separate each character
       char[] charArr = message.Content.ToCharArray();
       string responce = new Emoji("👏").ToString();

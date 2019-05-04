@@ -16,11 +16,11 @@ namespace ClapBot.Core.Commands
       string usersAdded = string.Empty;
       foreach (var user in Context.Message.MentionedUsers)
       {
-        if (!SaveSystem.Mocked.Contains(user) && (Starter.PriorityIds.Contains(Context.User.Discriminator) || Context.User == user))
+        if (!SaveSystem.GetMocked().Contains(user.Id) && (Starter.PriorityIds.Contains(Context.User.Discriminator) || Context.User == user))
         {
           usersAdded += user.Username + ", ";
           Console.WriteLine($"Adding {user.Id} to moked");
-          SaveSystem.Mocked.Add(user);
+          SaveSystem.AddMocked(user);
         }
       }
       if (usersAdded != string.Empty)
@@ -41,10 +41,10 @@ namespace ClapBot.Core.Commands
         string usersRemoved = string.Empty;
         foreach (var user in Context.Message.MentionedUsers)
         {
-          if (SaveSystem.Mocked.Contains(user))
+          if (SaveSystem.GetMocked().Contains(user.Id))
           {
             usersRemoved += user.Username + ", ";
-            SaveSystem.Mocked.Remove(user);
+            SaveSystem.RemoveMocked(user);
           }
         }
         if (usersRemoved != string.Empty)

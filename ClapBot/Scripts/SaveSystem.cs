@@ -96,37 +96,46 @@ namespace ClapBot
     #endregion
 
     #region Mocked Users
-    public static List<SocketUser> Mocked
+    public static List<ulong> GetMocked()
     {
-      get
-      {
-        return GetUsers(MockedSaveDirectory);
-      }
-      set
-      {
-        Console.WriteLine("In mocked property");
-        SetUsers(MockedSaveDirectory, value);
-      }
+      Console.WriteLine("Getting Mocked");
+      return GetUsers(MockedSaveDirectory);
     }
 
-    private static List<SocketUser> GetUsers(string path)
+    public static void AddMocked(SocketUser user)
     {
-      List<SocketUser> users = new List<SocketUser>();
+      var mocked = GetMocked();
+      mocked.Add(user.Id);
+      SetUsers(MockedSaveDirectory, mocked);
+      
+    }
+
+    public static void RemoveMocked(SocketUser user)
+    {
+      var newList = GetUsers(MockedSaveDirectory);
+      newList.Remove(user.Id);
+      SetUsers(MockedSaveDirectory, newList);
+    }
+
+    private static List<ulong> GetUsers(string path)
+    {
+      List<ulong> users = new List<ulong>();
       foreach(string line in File.ReadAllLines(path))
       {
         ulong.TryParse(line, out ulong id);
-        Starter.Client.GetUser(id);
+        Console.WriteLine("Getting user " + id);
+        users.Add(Starter.Client.GetUser(id).Id);
       }
       return users;
     }
 
-    private static void SetUsers(string path, List<SocketUser> users)
+    private static void SetUsers(string path, List<ulong> users)
     {
       List<string> lines = new List<string>();
-      foreach (SocketUser user in users)
+      foreach (ulong user in users)
       {
-        Console.WriteLine(user.Id.ToString());
-        lines.Add(user.Id.ToString());
+        Console.WriteLine(user);
+        lines.Add(user.ToString());
       }
 
       File.WriteAllLines(path, lines);
