@@ -17,7 +17,7 @@ namespace ClapBot.Core.Commands
         sb.AppendLine($"!{command.Name} - {command.Summary}");
       }
 
-      ClientConsole.Log($"Sending help to {Context.User}");
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Help", $"Sending help to {Context.User.Username}"));
       await dm.SendMessageAsync(sb.ToString());
       await Context.Message.DeleteAsync();
     }
@@ -28,13 +28,11 @@ namespace ClapBot.Core.Commands
     [Command("HelpChannel"), Summary("Displays all commands in the channel")]
     public async Task _HelpChannel()
     {
-      await Context.Channel.SendMessageAsync("Typing done");
-
       StringBuilder sb = new StringBuilder();
       foreach (var command in Starter.Commands.Commands)
         sb.AppendLine($"{command.Name} - {command.Summary}");
 
-      ClientConsole.Log($"Sending help to {Context.Channel.Name}");
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Help", $"Sending help in channel to {Context.User.Username}"));
       await Context.Channel.SendMessageAsync(sb.ToString());
     }
   }

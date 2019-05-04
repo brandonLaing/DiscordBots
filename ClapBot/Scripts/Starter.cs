@@ -30,6 +30,9 @@ namespace ClapBot
     }
 
     private static CommandService _commands;
+    /// <summary>
+    /// Bots set of commands
+    /// </summary>
     public static CommandService Commands
     {
       get
@@ -42,6 +45,9 @@ namespace ClapBot
       }
     }
 
+    /// <summary>
+    /// Todo: need to change to user 
+    /// </summary>
     public static string[] PriorityIds = { "2871", "6188", "5831"};
     #endregion
     /// <summary>
@@ -51,7 +57,7 @@ namespace ClapBot
     {
       get
       {
-        return "NTcyODY5NjAyMDMyNDg0Mzgz.XMvVoQ.MeWYkw1Ti949gLhaM2C1JSvcF7Q";
+        return "NTczNzY0Mjk5NTE2ODA1MTMw.XMycnQ.PsXjcnYeMMp0qt6m-QRtwxWYB5k";
       }
     }
 
@@ -86,14 +92,14 @@ namespace ClapBot
     {
       Client = new DiscordSocketClient(new DiscordSocketConfig
       {
-        LogLevel = LogSeverity.Debug
+        LogLevel = LogSeverity.Info
       });
 
       Commands = new CommandService(new CommandServiceConfig
       {
         CaseSensitiveCommands = false,
         DefaultRunMode = RunMode.Async,
-        LogLevel = LogSeverity.Debug,
+        LogLevel = LogSeverity.Info,
         IgnoreExtraArgs = true
       });
     }
@@ -122,11 +128,11 @@ namespace ClapBot
     {
       if (Token == string.Empty)
       {
-        ClientConsole.Log("Exited due to no key being set");
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Starter", "No token set"));
         return;
       }
 
-      ClientConsole.Log("Connecting to discord");
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Starter", "Attempting Connection to discord"));
       await Client.LoginAsync(TokenType.Bot, Token);
       await Client.StartAsync();
     }
