@@ -13,9 +13,10 @@ namespace ClapBot.Core.Commands
     {
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
-        if (!MessageHandler.channelsToReactIn.Contains(Context.Channel))
+        var reactChannels = await SaveSystem.GetReactChannel();
+        if (!reactChannels.Contains(Context.Channel.Id))
         {
-          MessageHandler.channelsToReactIn.Add(Context.Channel);
+          await SaveSystem.AddReactChannel(Context.Channel.Id);
           await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React Channel", $"Adding {Context.Channel.Name} to react channels by {Context.User.Username}"));
           await Context.Channel.SendMessageAsync("Starting reactions in this channel");
         }
@@ -30,9 +31,10 @@ namespace ClapBot.Core.Commands
     {
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
-        if (MessageHandler.channelsToReactIn.Contains(Context.Channel))
+        var reactChannels = await SaveSystem.GetReactChannel();
+        if (reactChannels.Contains(Context.Channel.Id))
         {
-          MessageHandler.channelsToReactIn.Remove(Context.Channel);
+          await SaveSystem.RemoveReactChannel(Context.Channel.Id);
           await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React Channel", $"Removing {Context.Channel.Name} from react channels by {Context.User.Username}"));
           await Context.Channel.SendMessageAsync("Stopping reactions in this channel");
         }

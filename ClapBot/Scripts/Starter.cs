@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -10,6 +8,9 @@ using Discord.WebSocket;
 
 namespace ClapBot
 {
+  /// <summary>
+  /// Main beginning of the program. Holds client and commands.
+  /// </summary>
   class Starter
   {
     #region Core Variables
@@ -49,7 +50,6 @@ namespace ClapBot
     /// Todo: need to change to user 
     /// </summary>
     public static string[] PriorityIds = { "2871", "6188", "5831"};
-    #endregion
     /// <summary>
     /// Bot Token
     /// </summary>
@@ -60,7 +60,9 @@ namespace ClapBot
         return "NTczNzY0Mjk5NTE2ODA1MTMw.XMycnQ.PsXjcnYeMMp0qt6m-QRtwxWYB5k";
       }
     }
+    #endregion
 
+    #region Startup
     /// <summary>
     /// Starter for this program
     /// </summary>
@@ -68,7 +70,7 @@ namespace ClapBot
     private static void Main(string[] args)
     {
       new Starter()
-        .Main()
+        .Initilizer()
         .GetAwaiter()
         .GetResult();
     }
@@ -77,7 +79,7 @@ namespace ClapBot
     ///  Main start sequence for the program 
     /// </summary>
     /// <returns></returns>
-    private async Task Main()
+    private async Task Initilizer()
     {
       InitilizeVariables();
 
@@ -105,7 +107,6 @@ namespace ClapBot
       await Task.Delay(-1);
     }
 
-    #region Startup
     /// <summary>
     /// Sets up the base variables for client and commands
     /// </summary>
@@ -123,8 +124,6 @@ namespace ClapBot
         LogLevel = LogSeverity.Info,
         IgnoreExtraArgs = true
       });
-
-      ClientConsole._logSeverity = LogSeverity.Info;
     }
 
     /// <summary>
@@ -231,7 +230,6 @@ namespace ClapBot
     {
       await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", $"Server {server.Name} has been left"));
     }
-
     #endregion
   }
 }

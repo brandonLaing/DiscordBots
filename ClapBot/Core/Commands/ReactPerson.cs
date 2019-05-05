@@ -17,10 +17,11 @@ namespace ClapBot.Core.Commands
         string usersAdded = string.Empty;
         foreach (SocketUser user in Context.Message.MentionedUsers)
         {
-          if (!MessageHandler.usersToReactTo.Contains(user))
+          var reactUsers = await SaveSystem.GetReactUser();
+          if (!reactUsers.Contains(user.Id))
           {
             usersAdded += user.Username + ", ";
-            MessageHandler.usersToReactTo.Add(user);
+            await SaveSystem.AddReactUser(user.Id);
           }
         }
         if (usersAdded != string.Empty)
@@ -40,10 +41,11 @@ namespace ClapBot.Core.Commands
         string usersRemoved = string.Empty;
         foreach (SocketUser user in Context.Message.MentionedUsers)
         {
-          if (MessageHandler.usersToReactTo.Contains(user))
+          var reactUsers = await SaveSystem.GetReactUser();
+          if (reactUsers.Contains(user.Id))
           {
             usersRemoved += user.Username + ", ";
-            MessageHandler.usersToReactTo.Remove(user);
+            await SaveSystem.RemoveReactUser(user.Id);
           }
         }
         if (usersRemoved != string.Empty)

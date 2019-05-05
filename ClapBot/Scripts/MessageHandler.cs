@@ -8,11 +8,11 @@ using Discord.WebSocket;
 
 namespace ClapBot
 {
+  /// <summary>
+  /// Controls all actions having to do with user messages
+  /// </summary>
   static class MessageHandler
   {
-    public static List<ISocketMessageChannel> channelsToReactIn = new List<ISocketMessageChannel>();
-    public static List<SocketUser> usersToReactTo = new List<SocketUser>();
-
     /// <summary>
     /// Action to be performed when a new message is received from discord
     /// </summary>
@@ -20,15 +20,10 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task ClientMessageRecived(SocketMessage rawMessage)
     {
-      // get info for message
-      var message = rawMessage as SocketUserMessage;
-      var context = new SocketCommandContext(Starter.Client, message);
-
-      // make sure message has something in it
-      if (
-        context.Message == null ||
-        context.Message.Content.Trim() == string.Empty ||
-        context.User.IsBot
+      // make sure message has something in it and message isn't from a bot
+      if (!(rawMessage is SocketUserMessage message) ||
+        message.Content.Trim() == string.Empty ||
+        message.Author.IsBot
         ) return;
 
       // display message
@@ -38,63 +33,61 @@ namespace ClapBot
       int prefixPos = 0;
       if (!message.HasCharPrefix('!', ref prefixPos) || message.HasMentionPrefix(Starter.Client.CurrentUser, ref prefixPos))
       {
-        Console.WriteLine("Not command");
         await Mock(message);
         await ReactWithClap(message);
-
         return;
       }
 
-      var result = await Starter.Commands.ExecuteAsync(context, prefixPos, null);
+      // Get command context 
+      var commandContext = new SocketCommandContext(Starter.Client, message);
+      if (commandContext == null || commandContext.Message == null) return;
+
+      // Execute command
+      var result = await Starter.Commands.ExecuteAsync(commandContext, prefixPos, null);
       if (!result.IsSuccess)
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler",$"Something went wrong with executing a command. Command : {context.Message.Content} | {result.ErrorReason}"));
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Something went wrong with executing a command. Command: {commandContext.Message.Content} | {result.ErrorReason}"));
+      else if (result.IsSuccess)
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Command was done successfully. Command: {commandContext.Message.Content}"));
     }
 
     /// <summary>
-    /// Edits user message to randomly capitalize or lowercase letter and replace spaces with claps
+    /// Deletes a users message and replies with a mocked version of that message
     /// </summary>
     /// <param name="message">Message that is being received</param>
     /// <returns></returns>
     private static async Task Mock(SocketUserMessage message)
     {
-      Console.WriteLine($"In Mocked {SaveSystem.GetMocked().Count}");
-
-      foreach (var mocked in SaveSystem.GetMocked())
-      {
-        Console.WriteLine("Checking get mocked v author id \n" + mocked + "\n" + message.Author.Id);
-        if (mocked == message.Author.Id)
-          Console.WriteLine("user in get mocked == author of this message");
-      }
-
-      if (SaveSystem.GetMocked().Contains(message.Author.Id))
-        Console.WriteLine("Save system contains the author of this message");
-
       // check if author should be mocked and that the message isn't empty
-      if (!SaveSystem.GetMocked().Contains(message.Author.Id) || message.Content == string.Empty)
+      var mockedList = await SaveSystem.GetMocked();
+      if (!mockedList.Contains(message.Author.Id) || message.Content == string.Empty)
         return;
 
-      Console.WriteLine("Should be mocked");
-      // separate each character
-      char[] charArr = message.Content.ToCharArray();
-      string responce = new Emoji("👏").ToString();
+      // Save message
+      char[] charArr = message.Content.Trim().ToCharArray();
+      await message.DeleteAsync();
+
+      // save emoji string
+      string clap = new Emoji("👏").ToString();
+
+      // start with a clap
+      string responce = clap;
       for (int i = 0; i < charArr.Length; i++)
       {
         // change spaces for claps and randomly capitalize and lowercase letters
         if (charArr[i] == ' ')
-          responce += new Emoji("👏");
+          responce += clap;
         else if (new Random().Next(0, 2) == 0)
-          responce += Char.ToUpper(charArr[i]);
+          responce += char.ToUpper(charArr[i]);
         else
-          responce += Char.ToLower(charArr[i]);
+          responce += char.ToLower(charArr[i]);
       }
       // end with clap
-      responce += new Emoji("👏");
+      responce += clap;
 
       // send info the logs
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Mocking {message.Author.Username} with message {responce} replacing {message.Content}"));
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Message", $"Mocking {message.Author.Username} with message {responce} replacing {message.Content}"));
       // send bot message with response
       await message.Channel.SendMessageAsync($"{responce} -From {message.Author.Username}");
-      await message.DeleteAsync();
     }
 
     /// <summary>
@@ -104,8 +97,13 @@ namespace ClapBot
     /// <returns></returns>
     private static async Task ReactWithClap(SocketUserMessage message)
     {
-      if (channelsToReactIn.Contains(message.Channel) || usersToReactTo.Contains(message.Author) || message.Author.IsBot)
+      List<ulong> reactUsers = await SaveSystem.GetReactUser();
+      var reactChannel = await SaveSystem.GetReactChannel();
+      if ((reactChannel.Contains(message.Channel.Id) || reactUsers.Contains(message.Author.Id)) && !message.Author.IsBot)
+      {
         await message.AddReactionAsync(new Emoji("👏"));
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Message", $"Adding clap reaction to {message.Author.Username} message {message.Content}"));
+      }
     }
   }
 }
