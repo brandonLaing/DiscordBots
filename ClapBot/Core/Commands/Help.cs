@@ -7,7 +7,7 @@ namespace ClapBot.Core.Commands
 {
   public class HelpDM : ModuleBase<SocketCommandContext>
   {
-    [Command("Help"), Alias("HelpDM"), Summary("Sends a DM of commands to the user")]
+    [Command("HelpClapBot"), Alias("HelpDM"), Summary("Sends a DM of commands to the user")]
     public async Task _HelpDM()
     {
       IDMChannel dm = await Context.User.GetOrCreateDMChannelAsync();
@@ -23,9 +23,9 @@ namespace ClapBot.Core.Commands
     }
   }
 
-  public class HelpChannel :ModuleBase<SocketCommandContext>
+  public class HelpChannel : ModuleBase<SocketCommandContext>
   {
-    [Command("HelpChannel"), Summary("Displays all commands in the channel")]
+    [Command("HelpClapBotChannel"), Summary("Displays all commands in the channel")]
     public async Task _HelpChannel()
     {
       StringBuilder sb = new StringBuilder();

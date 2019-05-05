@@ -24,7 +24,7 @@ namespace ClapBot.Core.Commands
         }
       }
       if (usersAdded != string.Empty)
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Mock User", $"Added {usersAdded} to mock list by {Context.User.Username}"));
+        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Mock User", $"Added {usersAdded} to mock list by {Context.User.Username}"));
     }
   }
   
@@ -49,7 +49,7 @@ namespace ClapBot.Core.Commands
           }
         }
         if (usersRemoved != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Mock User", $"Removed {usersRemoved} from mock list by {Context.User.Username}"));
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Mock User", $"Removed {usersRemoved} from mock list by {Context.User.Username}"));
       }
     }
   }

@@ -25,7 +25,7 @@ namespace ClapBot.Core.Commands
           }
         }
         if (usersAdded != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React User", $"Adding {usersAdded} to react list by {Context.User.Username}"));
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-React User", $"Adding {usersAdded} to react list by {Context.User.Username}"));
       }
     }
   }
@@ -49,7 +49,7 @@ namespace ClapBot.Core.Commands
           }
         }
         if (usersRemoved != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command React User", $"Removing {usersRemoved} from react list by {Context.User.Username}"));
+          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-React User", $"Removing {usersRemoved} from react list by {Context.User.Username}"));
       }
     }
   }
