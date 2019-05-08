@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using ClapBot.DataTypes;
 using Discord;
 using Discord.WebSocket;
 
@@ -56,6 +57,12 @@ namespace ClapBot
       await Log(new LogMessage(LogSeverity.Info, 
         "Message", 
         $"{message.Author.Username} id-{message.Author.Id} said \"{message.Content}\""));
+    }
+
+    public static async Task Log(ClientMessage message)
+    {
+      Console.WriteLine(message.ToString());
+      await SaveSystem.AddToSaveLog(message.ToString());
     }
   }
 }

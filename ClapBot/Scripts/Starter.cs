@@ -57,7 +57,7 @@ namespace ClapBot
     {
       get
       {
-        return "NTczNzY0Mjk5NTE2ODA1MTMw.XNHjFw.CLT3p-_E5xcNg3XImVJTZ4jAy7M";
+        return "NTczNzY0Mjk5NTE2ODA1MTMw.XM3JYg.-mNtppAxfPf4nRaH_janlhbNb-c";
       }
     }
     #endregion

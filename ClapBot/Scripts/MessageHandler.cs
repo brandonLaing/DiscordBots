@@ -5,6 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
+using ClapBot.DataTypes;
 
 namespace ClapBot
 {
@@ -27,7 +28,7 @@ namespace ClapBot
         ) return;
 
       // display message
-      await ClientConsole.Log(message);
+      await ClientConsole.Log(new ClientMessage(message));
 
       // check if its a command
       int prefixPos = 0;
