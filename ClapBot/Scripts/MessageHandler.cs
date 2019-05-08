@@ -67,7 +67,7 @@ namespace ClapBot
       await message.DeleteAsync();
 
       // save emoji string
-      string clap = new Emoji("👏").ToString();
+      string clap = new Emoji("👏🏻").ToString();
 
       // start with a clap
       string responce = clap;
@@ -101,7 +101,7 @@ namespace ClapBot
       var reactChannel = await SaveSystem.GetReactChannel();
       if ((reactChannel.Contains(message.Channel.Id) || reactUsers.Contains(message.Author.Id)) && !message.Author.IsBot)
       {
-        await message.AddReactionAsync(new Emoji("👏"));
+        await message.AddReactionAsync(new Emoji("👏🏻"));
         await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Message", $"Adding clap reaction to {message.Author.Username} message {message.Content}"));
       }
     }

@@ -33,7 +33,7 @@ namespace ClapBot
     /// </summary>
     /// <param name="message">Message to be sent to the log</param>
     /// <returns></returns>
-    public static async Task Log(LogMessage message, bool saveToLog)
+    public static async Task Log(LogMessage message, bool saveToLog = true)
     {
       string output =
         $"{MessageStart} " +

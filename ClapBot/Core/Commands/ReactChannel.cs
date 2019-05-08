@@ -11,6 +11,7 @@ namespace ClapBot.Core.Commands
     [Command("AddReactChannel"), Summary("Adds channel to be reacted to")]
     public async Task _ReactChannelAdd()
     {
+      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "react", "In react"));
       if (Starter.PriorityIds.Contains(Context.User.Discriminator))
       {
         var reactChannels = await SaveSystem.GetReactChannel();

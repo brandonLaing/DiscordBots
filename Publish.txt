@@ -1,0 +1,2 @@
+In package manager console
+type dotnet publish -r linux-arm

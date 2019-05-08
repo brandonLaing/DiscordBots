@@ -31,7 +31,7 @@ namespace ClapBot
     {
       get
       {
-        string _dataPath = CurrentDirectory + @"\Data";
+        string _dataPath = Path.Combine(CurrentDirectory, "Data");
         if (!Directory.Exists(_dataPath))
           Directory.CreateDirectory(_dataPath);
         return _dataPath;
@@ -44,7 +44,7 @@ namespace ClapBot
     {
       get
       {
-        string _LogSaveDirectory = DataPath + @"\SaveLog.txt";
+        string _LogSaveDirectory = Path.Combine(DataPath, "SaveLog.txt");
         if (!File.Exists(_LogSaveDirectory))
           File.Create(_LogSaveDirectory);
         return _LogSaveDirectory;
@@ -57,7 +57,7 @@ namespace ClapBot
     {
       get
       {
-        string _MockedSaveDirectory = DataPath + @"\Mocked.txt";
+        string _MockedSaveDirectory = Path.Combine(DataPath, "Mocked.txt");
         if (!File.Exists(_MockedSaveDirectory))
           File.Create(_MockedSaveDirectory);
         return _MockedSaveDirectory;
@@ -70,7 +70,7 @@ namespace ClapBot
     {
       get
       {
-        string _ReactUserSaveDirectory = DataPath + @"\ReactUser.txt";
+        string _ReactUserSaveDirectory = Path.Combine(DataPath, "ReactUser.txt");
         if (!File.Exists(_ReactUserSaveDirectory))
           File.Create(_ReactUserSaveDirectory);
         return _ReactUserSaveDirectory;
@@ -83,7 +83,7 @@ namespace ClapBot
     {
       get
       {
-        string _ReactChannelSaveDirectory = DataPath + @"\ReactChannel.txt";
+        string _ReactChannelSaveDirectory = Path.Combine(DataPath, "ReactChannel.txt");
         if (!File.Exists(_ReactChannelSaveDirectory))
           File.Create(_ReactChannelSaveDirectory);
         return _ReactChannelSaveDirectory;

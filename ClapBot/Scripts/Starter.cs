@@ -57,7 +57,7 @@ namespace ClapBot
     {
       get
       {
-        return "NTczNzY0Mjk5NTE2ODA1MTMw.XMycnQ.PsXjcnYeMMp0qt6m-QRtwxWYB5k";
+        return "NTczNzY0Mjk5NTE2ODA1MTMw.XNHjFw.CLT3p-_E5xcNg3XImVJTZ4jAy7M";
       }
     }
     #endregion
@@ -132,7 +132,7 @@ namespace ClapBot
     /// <returns></returns>
     private async Task SetGame()
     {
-      await Client.SetGameAsync($"with the {new Emoji("👏")} ", "", ActivityType.Playing);
+      await Client.SetGameAsync($"with the {new Emoji("👏🏻")} ", "", ActivityType.Playing);
     }
     #endregion
 
