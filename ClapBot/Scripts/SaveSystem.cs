@@ -31,8 +31,8 @@ namespace ClapBot
     {
       get
       {
-        string _dataPath = Path.Combine(CurrentDirectory, "Data");
-        if (!Directory.Exists(_dataPath))
+        string _dataPath = Path.Combine(Directory.GetParent(CurrentDirectory).ToString(), "Data");
+        if (!File.Exists(_dataPath))
           Directory.CreateDirectory(_dataPath);
         return _dataPath;
       }
@@ -44,10 +44,7 @@ namespace ClapBot
     {
       get
       {
-        string _LogSaveDirectory = Path.Combine(DataPath, "SaveLog.txt");
-        if (!File.Exists(_LogSaveDirectory))
-          File.Create(_LogSaveDirectory);
-        return _LogSaveDirectory;
+        return Path.Combine(DataPath, "ClapLog.txt");
       }
     }
     /// <summary>
@@ -57,10 +54,7 @@ namespace ClapBot
     {
       get
       {
-        string _MockedSaveDirectory = Path.Combine(DataPath, "Mocked.txt");
-        if (!File.Exists(_MockedSaveDirectory))
-          File.Create(_MockedSaveDirectory);
-        return _MockedSaveDirectory;
+        return Path.Combine(DataPath, "Mocked.txt");
       }
     }
     /// <summary>
@@ -70,10 +64,7 @@ namespace ClapBot
     {
       get
       {
-        string _ReactUserSaveDirectory = Path.Combine(DataPath, "ReactUser.txt");
-        if (!File.Exists(_ReactUserSaveDirectory))
-          File.Create(_ReactUserSaveDirectory);
-        return _ReactUserSaveDirectory;
+        return Path.Combine(DataPath, "ReactUser.txt");
       }
     }
     /// <summary>
@@ -83,10 +74,7 @@ namespace ClapBot
     {
       get
       {
-        string _ReactChannelSaveDirectory = Path.Combine(DataPath, "ReactChannel.txt");
-        if (!File.Exists(_ReactChannelSaveDirectory))
-          File.Create(_ReactChannelSaveDirectory);
-        return _ReactChannelSaveDirectory;
+        return Path.Combine(DataPath, "ReactChannel.txt");
       }
     }
     #endregion
@@ -99,7 +87,7 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task AddToSaveLog(string message)
     {
-      await File.AppendAllTextAsync(LogSaveDirectory, message + '\n');
+      await File.AppendAllTextAsync(LogSaveDirectory, message + "Space" + '\n');
     }
 
     /// <summary>
