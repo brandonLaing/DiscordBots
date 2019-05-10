@@ -46,19 +46,11 @@ namespace ClapBot
         await SaveSystem.AddToSaveLog(output);
     }
 
-
     /// <summary>
-    /// Takes socket user message and sends it back to the log as a log message
+    /// Takes a users message and displays it the console and saves it to a log
     /// </summary>
-    /// <param name="message">Users message</param>
+    /// <param name="message">Recived user message</param>
     /// <returns></returns>
-    public static async Task Log(SocketUserMessage message)
-    {
-      await Log(new LogMessage(LogSeverity.Info, 
-        "Message", 
-        $"{message.Author.Username} id-{message.Author.Id} said \"{message.Content}\""));
-    }
-
     public static async Task Log(ClientMessage message)
     {
       Console.WriteLine(message.ToString());

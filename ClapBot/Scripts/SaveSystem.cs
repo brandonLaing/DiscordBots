@@ -37,6 +37,7 @@ namespace ClapBot
         return _dataPath;
       }
     }
+
     /// <summary>
     /// Path to logs save file
     /// </summary>
@@ -79,6 +80,18 @@ namespace ClapBot
     }
     #endregion
 
+    #region ImportantFiles
+    public static string GetKey()
+    {
+      return string.Empty;
+    }
+
+    public static List<ulong> GetPriorityIds()
+    {
+      return null;
+    }
+    #endregion
+
     #region SaveLog
     /// <summary>
     /// Adds string to the end of save log
@@ -87,7 +100,7 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task AddToSaveLog(string message)
     {
-      await File.AppendAllTextAsync(LogSaveDirectory, message + "Space" + '\n');
+      await File.AppendAllTextAsync(LogSaveDirectory, message + '\n');
     }
 
     /// <summary>
@@ -96,7 +109,6 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task ClearLog()
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", "Clearing saved log"));
       await File.WriteAllTextAsync(LogSaveDirectory, string.Empty);
     }
 
@@ -106,7 +118,6 @@ namespace ClapBot
     /// <returns>Save log line by line</returns>
     public static async Task<string[]> GetLog()
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "SaveSystem", "Getting save log"));
       return await File.ReadAllLinesAsync(LogSaveDirectory);
     }
     #endregion
@@ -271,7 +282,6 @@ namespace ClapBot
 
       return users;
     }
-
     /// <summary>
     /// Saves ulong data to file
     /// </summary>

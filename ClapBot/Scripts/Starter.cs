@@ -50,6 +50,7 @@ namespace ClapBot
     /// Todo: need to change to user 
     /// </summary>
     public static string[] PriorityIds = { "2871", "6188", "5831"};
+
     /// <summary>
     /// Bot Token
     /// </summary>
