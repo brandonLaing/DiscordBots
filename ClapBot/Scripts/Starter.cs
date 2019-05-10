@@ -15,6 +15,8 @@ namespace ClapBot
   {
     #region Core Variables
     private static DiscordSocketClient _client;
+    private static CommandService _commands;
+
     /// <summary>
     /// Bots client that it uses
     /// </summary>
@@ -29,8 +31,6 @@ namespace ClapBot
         _client = value;
       }
     }
-
-    private static CommandService _commands;
     /// <summary>
     /// Bots set of commands
     /// </summary>
@@ -183,7 +183,7 @@ namespace ClapBot
     {
       if (Token == string.Empty)
       {
-        await ClientConsole.Log(new LogMessage(LogSeverity.Error, "Connector", "No token set"));
+        await ClientConsole.Log(new LogMessage(LogSeverity.Error, "Connector", "No token set. Bot will not connect"));
         return;
       }
 

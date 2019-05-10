@@ -5,7 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.Rest;
 using Discord.WebSocket;
-using ClapBot.DataTypes;
+using DiscordBots.DataTypes;
 
 namespace ClapBot
 {

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using ClapBot.DataTypes;
+using DiscordBots.DataTypes;
 using Discord;
 using Discord.WebSocket;
 
@@ -49,7 +49,7 @@ namespace ClapBot
     /// <summary>
     /// Takes a users message and displays it the console and saves it to a log
     /// </summary>
-    /// <param name="message">Recived user message</param>
+    /// <param name="message">Received user message</param>
     /// <returns></returns>
     public static async Task Log(ClientMessage message)
     {

@@ -1,6 +1,6 @@
 ﻿using Discord.WebSocket;
 
-namespace ClapBot.DataTypes
+namespace DiscordBots.DataTypes
 {
   /// <summary>
   /// Type that is primarily used for taking user messages and displaying them to the console
@@ -41,7 +41,7 @@ namespace ClapBot.DataTypes
       private set { _channelName = value; }
     }
     /// <summary>
-    /// Id of channel messsage was sent in
+    /// Id of channel message was sent in
     /// </summary>
     public ulong ChannelId
     {
@@ -60,7 +60,7 @@ namespace ClapBot.DataTypes
 
     #region Constructors
     /// <summary>
-    /// Gabs inportant information and saves it into this data type
+    /// Gabs important information and saves it into this data type
     /// </summary>
     /// <param name="_socketUserMessage">Message information being loaded in</param>
     public ClientMessage(SocketUserMessage _socketUserMessage)

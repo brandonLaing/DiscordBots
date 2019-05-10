@@ -1,12 +1,9 @@
 ﻿using Discord.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ClapBot.DataTypes
+namespace DiscordBots.DataTypes
 {
   /// <summary>
-  /// Type that is used for converting comamnd messages into a string to be displayed to a log
+  /// Type that is used for converting command messages into a string to be displayed to a log
   /// </summary>
   public class CommandMessage
   {
@@ -63,9 +60,9 @@ namespace ClapBot.DataTypes
 
     #region Constructor
     /// <summary>
-    /// Grabs inportant information and saves it into this data type.
+    /// Grabs important information and saves it into this data type.
     /// </summary>
-    /// <param name="commandName">Command name that message is comming from</param>
+    /// <param name="commandName">Command name that message is coming from</param>
     /// <param name="context">Context given in each command</param>
     public CommandMessage(string commandName, SocketCommandContext context)
     {
@@ -78,7 +75,7 @@ namespace ClapBot.DataTypes
     #endregion
 
     /// <summary>
-    /// Outputs comamnd information in a easy to read string
+    /// Outputs command information in a easy to read string
     /// </summary>
     /// <returns></returns>
     public override string ToString()
