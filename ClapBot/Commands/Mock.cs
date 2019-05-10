@@ -3,8 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using DiscordBots.DataTypes;
 
-namespace ClapBot.Core.Commands
+namespace ClapBot.Commands
 {
   public class MockAddPerson : ModuleBase<SocketCommandContext>
   {
@@ -21,10 +22,9 @@ namespace ClapBot.Core.Commands
         {
           usersAdded += user.Username + ", ";
           await SaveSystem.AddMocked(user.Id);
+          await ClientConsole.Log(new TargetedCommandMessage("AddMockUser", Context, user));
         }
       }
-      if (usersAdded != string.Empty)
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Mock User", $"Added {usersAdded} to mock list by {Context.User.Username}"));
     }
   }
   
@@ -46,10 +46,9 @@ namespace ClapBot.Core.Commands
           {
             usersRemoved += user.Username + ", ";
             await SaveSystem.RemoveMocked(user.Id);
+            await ClientConsole.Log(new TargetedCommandMessage("RemoveMockUser", Context, user));
           }
         }
-        if (usersRemoved != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-Mock User", $"Removed {usersRemoved} from mock list by {Context.User.Username}"));
       }
     }
   }

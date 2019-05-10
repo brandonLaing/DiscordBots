@@ -134,7 +134,7 @@ namespace ClapBot
       foreach (ulong id in mockedIds)
         ids += id.ToString() + ", ";
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Getting mocked users | {ids}"));
+      await ClientConsole.Log("Save System", $"Getting mocked users | {ids}");
       return mockedIds;
     }
 
@@ -149,7 +149,7 @@ namespace ClapBot
       {
         mocked.Add(userId);
         SaveUlongData(MockedSaveDirectory, mocked);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Adding {userId} to mocked list"));
+        await ClientConsole.Log("Save System", $"Adding {userId} to mocked list");
       }
     }
 
@@ -164,7 +164,7 @@ namespace ClapBot
       {
         mocked.Remove(userId);
         SaveUlongData(MockedSaveDirectory, mocked);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Removing {userId} from mocked list"));
+        await ClientConsole.Log("Save System", $"Removing {userId} from mocked list");
       }
     }
     #endregion
@@ -181,7 +181,7 @@ namespace ClapBot
       foreach (ulong id in reactUsers)
         ids += id.ToString() + ", ";
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Getting react users | {ids}"));
+      await ClientConsole.Log("Save System", $"Getting react users | {ids}");
       return reactUsers;
     }
 
@@ -197,7 +197,7 @@ namespace ClapBot
       {
         reactUser.Add(userId);
         SaveUlongData(ReactUserSaveDirectory, reactUser);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Adding {userId} to react users list"));
+        await ClientConsole.Log("Save System", $"Adding {userId} to react users list");
       }
     }
 
@@ -213,7 +213,7 @@ namespace ClapBot
       {
         reactUser.Remove(userId);
         SaveUlongData(ReactUserSaveDirectory, reactUser);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Removing {userId} from react user list"));
+        await ClientConsole.Log("Save System", $"Removing {userId} from react user list");
       }
     }
     #endregion
@@ -230,7 +230,7 @@ namespace ClapBot
       foreach (ulong id in reactChannels)
         ids += id.ToString() + ", ";
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Getting react channels | {ids}"));
+      await ClientConsole.Log("Save System", $"Getting react channels | {ids}");
       return reactChannels;
     }
 
@@ -245,7 +245,7 @@ namespace ClapBot
       {
         reactChannel.Add(channelId);
         SaveUlongData(ReactChannelDirectory, reactChannel);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Adding {channelId} to react channel"));
+        await ClientConsole.Log("Save System", $"Adding {channelId} to react channel");
       }
     }
 
@@ -260,7 +260,7 @@ namespace ClapBot
       {
         reactChannel.Remove(channelId);
         SaveUlongData(ReactChannelDirectory, reactChannel);
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Save System", $"Removing {channelId} from react channel"));
+        await ClientConsole.Log("Save System", $"Removing {channelId} from react channel");
       }
     }
     #endregion

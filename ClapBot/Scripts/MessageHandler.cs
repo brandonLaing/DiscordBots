@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using Discord.Rest;
 using Discord.WebSocket;
 using DiscordBots.DataTypes;
 
@@ -28,7 +27,7 @@ namespace ClapBot
         ) return;
 
       // display message
-      await ClientConsole.Log(new ClientMessage(message));
+      await ClientConsole.Log("Message Handler", new ClientMessage(message));
 
       // check if its a command
       int prefixPos = 0;
@@ -46,9 +45,9 @@ namespace ClapBot
       // Execute command
       var result = await Starter.Commands.ExecuteAsync(commandContext, prefixPos, null);
       if (!result.IsSuccess)
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Something went wrong with executing a command. Command: {commandContext.Message.Content} | {result.ErrorReason}"));
+        await ClientConsole.Log("Message Handler", $"Something went wrong with executing a command. Command: {commandContext.Message.Content} | {result.ErrorReason}");
       else if (result.IsSuccess)
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Message Handler", $"Command was done successfully. Command: {commandContext.Message.Content}"));
+        await ClientConsole.Log("Message Handler", $"Command was done successfully. Command: {commandContext.Message.Content}");
     }
 
     /// <summary>
@@ -86,7 +85,7 @@ namespace ClapBot
       responce += clap;
 
       // send info the logs
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Message", $"Mocking {message.Author.Username} with message {responce} replacing {message.Content}"));
+      await ClientConsole.Log("Command Message", $"Mocking {message.Author.Username}({message.Author.Id}) with message {responce} replacing {message.Content}");
       // send bot message with response
       await message.Channel.SendMessageAsync($"{responce} -From {message.Author.Username}");
     }
@@ -103,7 +102,7 @@ namespace ClapBot
       if ((reactChannel.Contains(message.Channel.Id) || reactUsers.Contains(message.Author.Id)) && !message.Author.IsBot)
       {
         await message.AddReactionAsync(new Emoji("👏🏻"));
-        await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command Message", $"Adding clap reaction to {message.Author.Username} message {message.Content}"));
+        await ClientConsole.Log("Command Message", $"Adding clap reaction to {message.Author.Username}'s({message.Author.Id}) message {message.Content}");
       }
     }
   }

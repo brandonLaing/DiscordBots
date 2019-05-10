@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using DiscordBots.DataTypes;
 
 namespace ClapBot
 {
@@ -138,42 +139,6 @@ namespace ClapBot
     #endregion
 
     #region Client Events
-    /// <summary>
-    /// Logic for when Client connect to discord
-    /// </summary>
-    /// <returns></returns>
-    private async Task OnConnected()
-    {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", "Connected to server"));
-    }
-
-    /// <summary>
-    /// Logic for when client is disconnected from discord.
-    /// </summary>
-    /// <param name="exception"></param>
-    /// <returns></returns>
-    private async Task OnDisconnected(Exception exception)
-    {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Error, "Connector", $"Disconnected from server. Exception {exception.Message}"));
-    }
-
-    /// <summary>
-    /// Logic for when client is logged out
-    /// </summary>
-    /// <returns></returns>
-    private async Task OnLoggedOut()
-    {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", "Logged out"));
-    }
-
-    /// <summary>
-    /// Logic for when client is logged in
-    /// </summary>
-    /// <returns></returns>
-    private async Task OnLoggedIn()
-    {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", "Logged in"));
-    }
 
     /// <summary>
     /// Attempts to connect client
@@ -183,13 +148,50 @@ namespace ClapBot
     {
       if (Token == string.Empty)
       {
-        await ClientConsole.Log(new LogMessage(LogSeverity.Error, "Connector", "No token set. Bot will not connect"));
+        await ClientConsole.Log("Connector", "No token set. Bot will not connect");
         return;
       }
+      await ClientConsole.Log("Connector", "Connecting to discord");
 
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", "Attempting Connection to discord"));
-        await Client.LoginAsync(TokenType.Bot, Token);
-        await Client.StartAsync();
+      await Client.LoginAsync(TokenType.Bot, Token);
+      await Client.StartAsync();
+    }
+
+    /// <summary>
+    /// Logic for when Client connect to discord
+    /// </summary>
+    /// <returns></returns>
+    private async Task OnConnected()
+    {
+      await ClientConsole.Log("Connector", "Connected to server");
+    }
+
+    /// <summary>
+    /// Logic for when client is disconnected from discord.
+    /// </summary>
+    /// <param name="exception"></param>
+    /// <returns></returns>
+    private async Task OnDisconnected(Exception exception)
+    {
+      await ClientConsole.Log("Connector", $"Disconnected from server. Exception {exception.Message}");
+    }
+
+    /// <summary>
+    /// Logic for when client is logged in
+    /// </summary>
+    /// <returns></returns>
+    private async Task OnLoggedIn()
+    {
+      await ClientConsole.Log("Connector", "Client has logged in");
+    }
+
+    /// <summary>
+    /// Logic for when client is logged out
+    /// </summary>
+    /// <returns></returns>
+    private async Task OnLoggedOut()
+    {
+      await ClientConsole.Log("Connector", "Client has logged out");
     }
 
     /// <summary>
@@ -199,7 +201,7 @@ namespace ClapBot
     /// <returns></returns>
     private async Task OnGuildAvailable(SocketGuild server)
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", $"Client became connected to {server.Name}"));
+      await ClientConsole.Log("Connector", $"Client became connected to {server.Name}({server.Id})");
     }
 
     /// <summary>
@@ -209,7 +211,7 @@ namespace ClapBot
     /// <returns></returns>
     private async Task OnGuildUnavailable(SocketGuild server)
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", $"Server {server.Name} has become unavailable."));
+      await ClientConsole.Log("Connector", $"Client became disconnected to {server.Name}({server.Id})");
     }
 
     /// <summary>
@@ -219,7 +221,7 @@ namespace ClapBot
     /// <returns></returns>
     private async Task OnJoinedGuild(SocketGuild server)
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", $"Server {server.Name} has been joined"));
+      await ClientConsole.Log("Connector", $"Server {server.Name}({server.Id}) has been joined");
     }
 
     /// <summary>
@@ -229,7 +231,7 @@ namespace ClapBot
     /// <returns></returns>
     private async Task OnLeftGuild(SocketGuild server)
     {
-      await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Connector", $"Server {server.Name} has been left"));
+      await ClientConsole.Log("Connector", $"Server {server.Name}({server.Id}) has been left");
     }
     #endregion
   }

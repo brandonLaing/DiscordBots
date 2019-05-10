@@ -1,4 +1,5 @@
 ﻿using Discord.Commands;
+using Discord.WebSocket;
 using DiscordBots.Enums;
 
 namespace DiscordBots.DataTypes
@@ -39,12 +40,20 @@ namespace DiscordBots.DataTypes
     #endregion
 
     #region Constructor
-    public TargetedCommandMessage(string commandName, SocketCommandContext context, string targetName, ulong targetId, TargetType tragetType) 
+    public TargetedCommandMessage(string commandName, SocketCommandContext context, SocketUser user) 
       : base(commandName, context)
     {
-      TargetName = targetName;
-      TargetId = targetId;
-      TargetType = tragetType;
+      TargetName = user.Username;
+      TargetId = user.Id;
+      TargetType = TargetType.User;
+    }
+
+    public TargetedCommandMessage(string commandName, SocketCommandContext context, ISocketMessageChannel channel)
+      : base(commandName, context)
+    {
+      TargetName = channel.Name;
+      TargetId = channel.Id;
+      TargetType = TargetType.Channel;
     }
     #endregion
 

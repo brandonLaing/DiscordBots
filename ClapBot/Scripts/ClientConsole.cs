@@ -11,7 +11,7 @@ namespace ClapBot
   /// <summary>
   /// Contains all logic for displaying information to console.
   /// </summary>
-  static class ClientConsole
+  public static class ClientConsole
   {
     /// <summary>
     /// Start of the message. Constant for all information send to the console
@@ -26,24 +26,13 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task Log(LogMessage message)
     {
-      await Log(message, true);
-    }
-
-    /// <summary>
-    /// Takes information and sends it to the console and saves it a log file.
-    /// </summary>
-    /// <param name="message">Message to be sent to the log</param>
-    /// <returns></returns>
-    public static async Task Log(LogMessage message, bool saveToLog = true)
-    {
       string output =
         $"{MessageStart} " +
         $"{message.Source}: " +
         $"{message.Message}";
 
       Console.WriteLine(output);
-      if (saveToLog)
-        await SaveSystem.AddToSaveLog(output);
+      await SaveSystem.AddToSaveLog(output);
     }
 
     /// <summary>
@@ -51,10 +40,22 @@ namespace ClapBot
     /// </summary>
     /// <param name="message">Received user message</param>
     /// <returns></returns>
-    public static async Task Log(ClientMessage message)
+    public static async Task Log(string source, ClientMessage message)
     {
-      Console.WriteLine(message.ToString());
-      await SaveSystem.AddToSaveLog(message.ToString());
+      Console.WriteLine($"{MessageStart} {source}: {message.ToString()}");
+      await SaveSystem.AddToSaveLog($"{MessageStart} {source}: {message.ToString()}");
+    }
+
+    public static async Task Log(string source, string message)
+    {
+      Console.WriteLine($"{MessageStart} {source}: {message}");
+      await SaveSystem.AddToSaveLog($"{MessageStart} {source}: {message.ToString()}");
+    }
+
+    public static async Task Log(CommandMessage message)
+    {
+      Console.WriteLine($"{MessageStart} Command: {message.ToString()}");
+      await SaveSystem.AddToSaveLog($"{MessageStart} Command: {message.ToString()}");
     }
   }
 }

@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using DiscordBots.DataTypes;
 
-namespace ClapBot.Core.Commands
+namespace ClapBot.Commands
 {
   public class ReactPersonAdd : ModuleBase<SocketCommandContext>
   {
@@ -22,10 +23,9 @@ namespace ClapBot.Core.Commands
           {
             usersAdded += user.Username + ", ";
             await SaveSystem.AddReactUser(user.Id);
+            await ClientConsole.Log(new TargetedCommandMessage("AddReactUser", Context, user));
           }
         }
-        if (usersAdded != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-React User", $"Adding {usersAdded} to react list by {Context.User.Username}"));
       }
     }
   }
@@ -46,10 +46,9 @@ namespace ClapBot.Core.Commands
           {
             usersRemoved += user.Username + ", ";
             await SaveSystem.RemoveReactUser(user.Id);
+            await ClientConsole.Log(new TargetedCommandMessage("RemoveReactUser", Context, user));
           }
         }
-        if (usersRemoved != string.Empty)
-          await ClientConsole.Log(new LogMessage(LogSeverity.Info, "Command-React User", $"Removing {usersRemoved} from react list by {Context.User.Username}"));
       }
     }
   }
