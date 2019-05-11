@@ -31,13 +31,12 @@ namespace ClapBot
     {
       get
       {
-        string _dataPath = Path.Combine(Directory.GetParent(CurrentDirectory).ToString(), "Data");
-        if (!File.Exists(_dataPath))
-          Directory.CreateDirectory(_dataPath);
-        return _dataPath;
+        string _path = Path.Combine(Directory.GetParent(CurrentDirectory).ToString(), "Data");
+        if (!Directory.Exists(_path))
+          Directory.CreateDirectory(_path);
+        return _path;
       }
     }
-
     /// <summary>
     /// Path to logs save file
     /// </summary>
@@ -45,7 +44,9 @@ namespace ClapBot
     {
       get
       {
-        return Path.Combine(DataPath, "ClapLog.txt");
+        string _path = Path.Combine(DataPath, "ClapLog.txt");
+        VerifyFile(_path);
+        return _path;
       }
     }
     /// <summary>
@@ -55,7 +56,9 @@ namespace ClapBot
     {
       get
       {
-        return Path.Combine(DataPath, "Mocked.txt");
+        string _path = Path.Combine(DataPath, "Mocked.txt");
+        VerifyFile(_path);
+        return _path;
       }
     }
     /// <summary>
@@ -65,7 +68,9 @@ namespace ClapBot
     {
       get
       {
-        return Path.Combine(DataPath, "ReactUser.txt");
+        string _path = Path.Combine(DataPath, "ReactUser.txt");
+        VerifyFile(_path);
+        return _path;
       }
     }
     /// <summary>
@@ -75,20 +80,85 @@ namespace ClapBot
     {
       get
       {
-        return Path.Combine(DataPath, "ReactChannel.txt");
+        string _path = Path.Combine(DataPath, "ReactChannel.txt");
+        VerifyFile(_path);
+        return _path;
+      }
+    }
+    /// <summary>
+    /// Path for admins id save location
+    /// </summary>
+    private static string AdminDirectory
+    {
+      get
+      {
+        string _path = Path.Combine(DataPath, "Admins.txt");
+        VerifyFile(_path);
+        return _path;
+      }
+    }
+    /// <summary>
+    /// Path of bots login token location
+    /// </summary>
+    private static string TokenDirectory
+    {
+      get
+      {
+        string _path = Path.Combine(DataPath, "Token.txt");
+        VerifyFile(_path);
+        return _path;
       }
     }
     #endregion
 
     #region ImportantFiles
-    public static string GetKey()
+    /// <summary>
+    /// Gets the Token for logging in the bot
+    /// </summary>
+    /// <returns></returns>
+    public static string Token
     {
-      return string.Empty;
+      get
+      {
+        string[] tokenLines = File.ReadAllLines(TokenDirectory);
+        return tokenLines[0];
+      }
     }
-
-    public static List<ulong> GetPriorityIds()
+    /// <summary>
+    /// Gets all the current admins discord ids
+    /// </summary>
+    /// <returns>Ulong list of ids</returns>
+    public static async Task<List<ulong>> GetAdminIds()
     {
-      return null;
+      return await LoadUlongData(AdminDirectory);
+    }
+    /// <summary>
+    /// Adds id to the list of admins
+    /// </summary>
+    /// <param name="id">Id of user to add</param>
+    /// <returns></returns>
+    public static async Task AddAdminId(ulong id)
+    {
+      List<ulong> admins = await GetAdminIds();
+      if (!admins.Contains(id))
+      {
+        admins.Add(id);
+        SaveUlongData(AdminDirectory, admins);
+      }
+    }
+    /// <summary>
+    /// Removes an user from the admin list
+    /// </summary>
+    /// <param name="id">Id for user to be removed</param>
+    /// <returns></returns>
+    public static async Task RemoveAdminId(ulong id)
+    {
+      List<ulong> admins = await GetAdminIds();
+      if (admins.Contains(id))
+      {
+        admins.Remove(id);
+        SaveUlongData(AdminDirectory, admins);
+      }
     }
     #endregion
 
@@ -129,42 +199,32 @@ namespace ClapBot
     /// <returns>List of user ids</returns>
     public static async Task<List<ulong>> GetMocked()
     {
-      List<ulong> mockedIds = LoadUlongData(MockedSaveDirectory);
-      string ids = string.Empty;
-      foreach (ulong id in mockedIds)
-        ids += id.ToString() + ", ";
-
-      await ClientConsole.Log("Save System", $"Getting mocked users | {ids}");
-      return mockedIds;
+      return await LoadUlongData(MockedSaveDirectory);
     }
-
     /// <summary>
     /// Adds user to mocked list
     /// </summary>
     /// <param name="userId">Id to add</param>
     public static async Task AddMocked(ulong userId)
     {
-      var mocked = await GetMocked();
+      List<ulong> mocked = await GetMocked();
       if (!mocked.Contains(userId))
       {
         mocked.Add(userId);
         SaveUlongData(MockedSaveDirectory, mocked);
-        await ClientConsole.Log("Save System", $"Adding {userId} to mocked list");
       }
     }
-
     /// <summary>
     /// Removes a user from the mocked list
     /// </summary>
     /// <param name="userId">Id to remove</param>
     public static async Task RemoveMocked(ulong userId)
     {
-      var mocked = LoadUlongData(MockedSaveDirectory);
+      List<ulong> mocked = await GetMocked();
       if (mocked.Contains(userId))
       {
         mocked.Remove(userId);
         SaveUlongData(MockedSaveDirectory, mocked);
-        await ClientConsole.Log("Save System", $"Removing {userId} from mocked list");
       }
     }
     #endregion
@@ -176,15 +236,8 @@ namespace ClapBot
     /// <returns>List of user ids</returns>
     public static async Task<List<ulong>> GetReactUser()
     {
-      List<ulong> reactUsers = LoadUlongData(ReactUserSaveDirectory);
-      string ids = string.Empty;
-      foreach (ulong id in reactUsers)
-        ids += id.ToString() + ", ";
-
-      await ClientConsole.Log("Save System", $"Getting react users | {ids}");
-      return reactUsers;
+      return await LoadUlongData(ReactUserSaveDirectory);
     }
-
     /// <summary>
     /// Adds user to react list
     /// </summary>
@@ -192,15 +245,13 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task AddReactUser(ulong userId)
     {
-      var reactUser = await GetReactUser();
+      List<ulong> reactUser = await GetReactUser();
       if (!reactUser.Contains(userId))
       {
         reactUser.Add(userId);
         SaveUlongData(ReactUserSaveDirectory, reactUser);
-        await ClientConsole.Log("Save System", $"Adding {userId} to react users list");
       }
     }
-
     /// <summary>
     /// Removes user from react list
     /// </summary>
@@ -208,12 +259,11 @@ namespace ClapBot
     /// <returns></returns>
     public static async Task RemoveReactUser(ulong userId)
     {
-      var reactUser = await GetReactUser();
+      List<ulong> reactUser = await GetReactUser();
       if (reactUser.Contains(userId))
       {
         reactUser.Remove(userId);
         SaveUlongData(ReactUserSaveDirectory, reactUser);
-        await ClientConsole.Log("Save System", $"Removing {userId} from react user list");
       }
     }
     #endregion
@@ -225,56 +275,56 @@ namespace ClapBot
     /// <returns>List of channel ids</returns>
     public static async Task<List<ulong>> GetReactChannel()
     {
-      List<ulong> reactChannels = LoadUlongData(ReactChannelDirectory);
-      string ids = string.Empty;
-      foreach (ulong id in reactChannels)
-        ids += id.ToString() + ", ";
-
-      await ClientConsole.Log("Save System", $"Getting react channels | {ids}");
-      return reactChannels;
+      return await LoadUlongData(ReactChannelDirectory);
     }
-
     /// <summary>
     /// Adds channel to react list
     /// </summary>
     /// <param name="channelId">Channel id to add</param>
     public static async Task AddReactChannel(ulong channelId)
     {
-      var reactChannel = await GetReactChannel();
+      List<ulong> reactChannel = await GetReactChannel();
       if (!reactChannel.Contains(channelId))
       {
         reactChannel.Add(channelId);
         SaveUlongData(ReactChannelDirectory, reactChannel);
-        await ClientConsole.Log("Save System", $"Adding {channelId} to react channel");
       }
     }
-
     /// <summary>
     /// Removes channel from react list
     /// </summary>
     /// <param name="channelId">Channel id to remove</param>
     public static async Task RemoveReactChannel(ulong channelId)
     {
-      var reactChannel = await GetReactChannel();
+      List<ulong> reactChannel = await GetReactChannel();
       if (reactChannel.Contains(channelId))
       {
         reactChannel.Remove(channelId);
         SaveUlongData(ReactChannelDirectory, reactChannel);
-        await ClientConsole.Log("Save System", $"Removing {channelId} from react channel");
       }
     }
     #endregion
 
     #region File read/write
     /// <summary>
+    /// Make file in desired location if none exists
+    /// </summary>
+    /// <param name="path"></param>
+    private static void VerifyFile(string path)
+    {
+      if (!File.Exists(path))
+        File.Create(path);
+    }
+    /// <summary>
     /// Loads ulong data from file
     /// </summary>
     /// <param name="path">Path of file to load from</param>
     /// <returns>List of ulongs</returns>
-    private static List<ulong> LoadUlongData(string path)
+    private static async Task<List<ulong>> LoadUlongData(string path)
     {
       List<ulong> users = new List<ulong>();
-      foreach (string line in File.ReadAllLines(path))
+      string[] lines = await File.ReadAllLinesAsync(path);
+      foreach (string line in lines)
       {
         ulong.TryParse(line, out ulong id);
         users.Add(id);

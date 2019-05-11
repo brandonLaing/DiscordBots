@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
 using DiscordBots.DataTypes;
 using Discord;
-using Discord.WebSocket;
 
 namespace ClapBot
 {

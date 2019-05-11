@@ -1,30 +1,44 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using Discord;
 using Discord.Commands;
+using Discord.WebSocket;
 using DiscordBots.DataTypes;
 
 namespace ClapBot.Commands
 {
   public class MockAddPerson : ModuleBase<SocketCommandContext>
   {
-    [Command("AddMockUser"), Summary("Starts mocking a user")]
+    [Command("AddMockUser"), Summary("Takes user message edits it then sends it back to chat.")]
 
     public async Task _MockAddPerson()
     {
       await Context.Message.DeleteAsync();
-      string usersAdded = string.Empty;
-      foreach (var user in Context.Message.MentionedUsers)
+
+      List<ulong> mocked = await SaveSystem.GetMocked();
+      IReadOnlyCollection<SocketUser> mentioned = Context.Message.MentionedUsers;
+
+      if (mentioned.Count == 0 && !mocked.Contains(Context.User.Id))
       {
-        var mocked = await SaveSystem.GetMocked();
-        if (!mocked.Contains(user.Id) && (Starter.PriorityIds.Contains(Context.User.Discriminator) || Context.User == user))
-        {
-          usersAdded += user.Username + ", ";
-          await SaveSystem.AddMocked(user.Id);
-          await ClientConsole.Log(new TargetedCommandMessage("AddMockUser", Context, user));
-        }
+        await SaveSystem.AddMocked(Context.User.Id);
+        await ClientConsole.Log(new TargetedCommandMessage("AddMockUser", Context, Context.User));
+        await Context.Channel.SendMessageAsync($"Starting to mock {Context.User.Mention}");
+        return;
       }
+
+      List<ulong> adminIds = await SaveSystem.GetAdminIds();
+      if (adminIds.Contains(Context.User.Id) || adminIds.Count == 0)
+        foreach (SocketUser user in mentioned)
+        {
+          if (!mocked.Contains(user.Id) && Context.User == user)
+          {
+            await SaveSystem.AddMocked(user.Id);
+            await ClientConsole.Log(new TargetedCommandMessage("AddMockUser", Context, user));
+            await Context.Channel.SendMessageAsync($"Starting to mock {user.Mention}");
+          }
+        }
     }
   }
   
@@ -36,17 +50,27 @@ namespace ClapBot.Commands
     {
       await Context.Message.DeleteAsync();
 
-      if (Starter.PriorityIds.Contains(Context.User.Discriminator))
+      List<ulong> adminIds = await SaveSystem.GetAdminIds();
+      if (adminIds.Contains(Context.User.Id) || adminIds.Count == 0)
       {
-        string usersRemoved = string.Empty;
-        foreach (var user in Context.Message.MentionedUsers)
+        List<ulong> mocked = await SaveSystem.GetMocked();
+        IReadOnlyCollection<SocketUser> mentioned = Context.Message.MentionedUsers;
+
+        if (mentioned.Count == 0 && mocked.Contains(Context.User.Id))
         {
-          var mocked = await SaveSystem.GetMocked();
+          await SaveSystem.RemoveMocked(Context.User.Id);
+          await ClientConsole.Log(new TargetedCommandMessage("RemoveReactUser", Context, Context.Channel));
+          await Context.Channel.SendMessageAsync($"Stopped mocking messages from {Context.User.Mention}");
+          return;
+        }
+
+        foreach (SocketUser user in mentioned)
+        {
           if (mocked.Contains(user.Id))
           {
-            usersRemoved += user.Username + ", ";
             await SaveSystem.RemoveMocked(user.Id);
             await ClientConsole.Log(new TargetedCommandMessage("RemoveMockUser", Context, user));
+            await Context.Channel.SendMessageAsync($"Stopped mocking messages from {user.Mention}");
           }
         }
       }

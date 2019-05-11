@@ -5,6 +5,7 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using DiscordBots.DataTypes;
+using ClapBot.Resources;
 
 namespace ClapBot
 {
@@ -67,7 +68,7 @@ namespace ClapBot
       await message.DeleteAsync();
 
       // save emoji string
-      string clap = new Emoji("👏🏻").ToString();
+      string clap = ClapEmoji.LightClap.ToString();
 
       // start with a clap
       string responce = clap;
@@ -97,11 +98,12 @@ namespace ClapBot
     /// <returns></returns>
     private static async Task ReactWithClap(SocketUserMessage message)
     {
+
       List<ulong> reactUsers = await SaveSystem.GetReactUser();
-      var reactChannel = await SaveSystem.GetReactChannel();
+      List<ulong> reactChannel = await SaveSystem.GetReactChannel();
       if ((reactChannel.Contains(message.Channel.Id) || reactUsers.Contains(message.Author.Id)) && !message.Author.IsBot)
       {
-        await message.AddReactionAsync(new Emoji("👏🏻"));
+        await message.AddReactionAsync(ClapEmoji.LightClap);
         await ClientConsole.Log("Command Message", $"Adding clap reaction to {message.Author.Username}'s({message.Author.Id}) message {message.Content}");
       }
     }

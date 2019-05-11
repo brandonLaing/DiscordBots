@@ -46,22 +46,6 @@ namespace ClapBot
         _commands = value;
       }
     }
-
-    /// <summary>
-    /// Todo: need to change to user 
-    /// </summary>
-    public static string[] PriorityIds = { "2871", "6188", "5831"};
-
-    /// <summary>
-    /// Bot Token
-    /// </summary>
-    private static string Token
-    {
-      get
-      {
-        return "NTczNzY0Mjk5NTE2ODA1MTMw.XM3JYg.-mNtppAxfPf4nRaH_janlhbNb-c";
-      }
-    }
     #endregion
 
     #region Startup
@@ -146,14 +130,14 @@ namespace ClapBot
     /// <returns></returns>
     private async Task Connect()
     {
-      if (Token == string.Empty)
+      if (SaveSystem.Token == string.Empty)
       {
         await ClientConsole.Log("Connector", "No token set. Bot will not connect");
         return;
       }
       await ClientConsole.Log("Connector", "Connecting to discord");
 
-      await Client.LoginAsync(TokenType.Bot, Token);
+      await Client.LoginAsync(TokenType.Bot, SaveSystem.Token);
       await Client.StartAsync();
     }
 

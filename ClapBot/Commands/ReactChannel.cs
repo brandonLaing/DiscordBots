@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Discord;
 using Discord.Commands;
 using DiscordBots.DataTypes;
 
-namespace ClapBot.Core.Commands
+namespace ClapBot.Commands
 {
   public class ReactChannelAdd : ModuleBase<SocketCommandContext>
   {
-    [Command("AddReactChannel"), Summary("Adds channel to be reacted to")]
+    [Command("AddReactChannel"), Summary("Adds a clap to each message the channel")]
     public async Task _ReactChannelAdd()
     {
-      if (Starter.PriorityIds.Contains(Context.User.Discriminator))
+      List<ulong> adminIds = await SaveSystem.GetAdminIds();
+      if (adminIds.Contains(Context.User.Id) || adminIds.Count == 0)
       {
-        var reactChannels = await SaveSystem.GetReactChannel();
+        List<ulong> reactChannels = await SaveSystem.GetReactChannel();
         if (!reactChannels.Contains(Context.Channel.Id))
         {
           await SaveSystem.AddReactChannel(Context.Channel.Id);
@@ -22,6 +23,7 @@ namespace ClapBot.Core.Commands
           await Context.Channel.SendMessageAsync("Starting reactions in this channel");
         }
       }
+      await Context.Message.DeleteAsync();
     }
   }
 
@@ -30,10 +32,13 @@ namespace ClapBot.Core.Commands
     [Command("RemoveReactChannel"), Summary("Removes channel to be reacted to")]
     public async Task _ReactChannelRemove()
     {
-      if (Starter.PriorityIds.Contains(Context.User.Discriminator))
+      await Context.Message.DeleteAsync();
+
+      List<ulong> adminIds = await SaveSystem.GetAdminIds();
+      if (adminIds.Contains(Context.User.Id) || adminIds.Count == 0)
       {
-        var reactChannels = await SaveSystem.GetReactChannel();
-        if (reactChannels.Contains(Context.Channel.Id))
+        List<ulong> reactChannels = await SaveSystem.GetReactChannel();
+        if (reactChannels.Contains(Context.Channel.Id) || adminIds.Count == 0)
         {
           await SaveSystem.RemoveReactChannel(Context.Channel.Id);
           await ClientConsole.Log(new TargetedCommandMessage("RemoveReactChannel", Context, Context.Channel));
